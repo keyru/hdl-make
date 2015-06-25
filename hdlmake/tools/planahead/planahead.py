@@ -228,6 +228,7 @@ mrproper:
 
     def __emit_files(self):
         tmp = "add_files -norecurse {0}"
+        lib_tmp = "set_property library {0} [get_files  {1}]"
         ret = []
         from srcfile import VHDLFile, VerilogFile, SVFile, UCFFile, NGCFile, XMPFile, XCOFile
         for f in self.files:
@@ -236,6 +237,10 @@ mrproper:
             else:
                 continue
             ret.append(line)
+
+            if isinstance(f, VHDLFile) and f.library !='work':
+                line = lib_tmp.format(f.library, f.rel_path())
+                ret.append(line)
         return ('\n'.join(ret))+'\n'
 
 
